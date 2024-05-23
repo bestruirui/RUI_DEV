@@ -7,7 +7,7 @@ ENV PATH=$PATH:/root/.pyenv/bin
 
 SHELL ["/bin/bash", "-c"] 
 
-RUN apt update && apt install -y openssh-server curl wget git gcc g++ make cmake liblzma-dev libnss3-dev zlib1g-dev libgdbm-dev libncurses5-dev   libssl-dev libffi-dev libreadline-dev libsqlite3-dev libbz2-dev
+RUN apt update && apt install -y nano openssh-server curl wget git gcc g++ make cmake liblzma-dev libnss3-dev zlib1g-dev libgdbm-dev libncurses5-dev   libssl-dev libffi-dev libreadline-dev libsqlite3-dev libbz2-dev
 
 # GO
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash &&\
@@ -19,8 +19,9 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | ba
 # Node
 RUN curl -LO https://golang.org/dl/go$GO_VERSION.linux-amd64.tar.gz && \
     rm -rf /usr/local/go &&\
-    tar -C /usr/local -xzf go$GO_VERSION.linux-amd64.tar.gz && rm -rf go$GO_VERSION.linux-amd64.tar.gz
-    
+    tar -C /usr/local -xzf go$GO_VERSION.linux-amd64.tar.gz && rm -rf go$GO_VERSION.linux-amd64.tar.gz &&\
+    echo 'PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc
+
 # Python
 RUN curl https://pyenv.run | bash && \
     echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc &&\
