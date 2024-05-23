@@ -9,19 +9,17 @@ SHELL ["/bin/bash", "-c"]
 
 RUN apt update && apt install -y nano openssh-server curl wget git gcc g++ make cmake liblzma-dev libnss3-dev zlib1g-dev libgdbm-dev libncurses5-dev   libssl-dev libffi-dev libreadline-dev libsqlite3-dev libbz2-dev && apt clean && rm -rf /var/lib/apt/lists/*
 
-# Node
-RUN curl -LO https://golang.org/dl/go$GO_VERSION.linux-amd64.tar.gz && \
-    rm -rf /usr/local/go &&\
-    tar -C /usr/local -xzf go$GO_VERSION.linux-amd64.tar.gz && rm -rf go$GO_VERSION.linux-amd64.tar.gz &&\
-    echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc
-
 # GO
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash &&\
     export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")" &&\
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && \
     nvm install 18 && nvm install 20  && nvm use 20 && \
-    npm config set registry https://registry.npmmirror.com &&\
-    curl https://pyenv.run | bash && \
+    npm config set registry https://registry.npmmirror.com
+
+
+
+# Python
+RUN curl https://pyenv.run | bash && \
     echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc &&\
     echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc &&\
     echo 'eval "$(pyenv init -)"' >> ~/.bashrc &&\
