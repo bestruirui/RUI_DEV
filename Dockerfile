@@ -20,7 +20,7 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | ba
 RUN curl -LO https://golang.org/dl/go$GO_VERSION.linux-amd64.tar.gz && \
     rm -rf /usr/local/go &&\
     tar -C /usr/local -xzf go$GO_VERSION.linux-amd64.tar.gz && rm -rf go$GO_VERSION.linux-amd64.tar.gz &&\
-    echo 'PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc
+    echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc
 
 # Python
 RUN curl https://pyenv.run | bash && \
