@@ -7,17 +7,23 @@ ENV PATH=$PATH:/root/.pyenv/bin
 
 SHELL ["/bin/bash", "-c"] 
 
-RUN apt update && apt install -y nano openssh-server curl wget git gcc g++ make cmake liblzma-dev libnss3-dev zlib1g-dev libgdbm-dev libncurses5-dev   libssl-dev libffi-dev libreadline-dev libsqlite3-dev libbz2-dev &&\
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash &&\
+RUN apt update && apt install -y nano openssh-server curl wget git gcc g++ make cmake liblzma-dev libnss3-dev zlib1g-dev libgdbm-dev libncurses5-dev   libssl-dev libffi-dev libreadline-dev libsqlite3-dev libbz2-dev && apt clean && rm -rf /var/lib/apt/lists/*
+
+# GO
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash &&\
     export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")" &&\
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && \
     nvm install 18 && nvm install 20  && nvm use 20 && \
-    npm config set registry https://registry.npmmirror.com &&\
-    curl -LO https://golang.org/dl/go$GO_VERSION.linux-amd64.tar.gz && \
+    npm config set registry https://registry.npmmirror.com
+
+# Node
+RUN curl -LO https://golang.org/dl/go$GO_VERSION.linux-amd64.tar.gz && \
     rm -rf /usr/local/go &&\
     tar -C /usr/local -xzf go$GO_VERSION.linux-amd64.tar.gz && rm -rf go$GO_VERSION.linux-amd64.tar.gz &&\
-    echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc &&\
-    curl https://pyenv.run | bash && \
+    echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc
+
+# Python
+RUN curl https://pyenv.run | bash && \
     echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc &&\
     echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc &&\
     echo 'eval "$(pyenv init -)"' >> ~/.bashrc &&\
@@ -39,7 +45,6 @@ RUN apt update && apt install -y nano openssh-server curl wget git gcc g++ make 
     echo '}' >> /root/.bashrc  &&\
     echo "PS1='\[\033[01;32m\]bestrui\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\]$(parse_git_branch) \$ ' ">> /root/.bashrc &&\
     sed -i 's/http:\/\/deb.debian.org\/debian/http:\/\/mirrors.tuna.tsinghua.edu.cn\/debian/' /etc/apt/sources.list.d/debian.sources &&\
-    sed -i 's/http:\/\/security.debian.org\/debian/http:\/\/mirrors.tuna.tsinghua.edu.cn\/debian/' /etc/apt/sources.list.d/debian.sources &&\
-    apt clean && rm -rf /var/lib/apt/lists/*
+    sed -i 's/http:\/\/security.debian.org\/debian/http:\/\/mirrors.tuna.tsinghua.edu.cn\/debian/' /etc/apt/sources.list.d/debian.sources
 
 CMD ["/usr/sbin/sshd", "-D"]
