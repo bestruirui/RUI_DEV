@@ -36,6 +36,11 @@ RUN mkdir /var/run/sshd && \
     sed -i 's/#Port 22/Port 2222/' /etc/ssh/sshd_config &&\
     sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config &&\
     echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDBtmBBUuFyYNFB3OXjdfmwj5SmyzCQFEykHKX61q8sczdkhA+ZDgYM+OuNfgvfqUbOo0/qkt1gLK45qX4Ex2x02uM6NasPmA8mT7Tj3IygHWzTxQgmgD1P2c9DLs+MOa7vqLvjHWg54YdKmshrf7GXCsy2SNIs3i2Q9C1H5y3uAc2EgG3X7mUdpjMVwfytvEzfxEJSZTIJ3FeO2ImB3YPPiVys7/ZP3AaNQMXnlhA/kRfpFfg9QYoW4koAkY99N4tcIBHRvA+AX9MiCfLNVqz5KiOef8nxAlESIpE2whTsHp3uXJCw9sqUkU49dH4geFk3ozDHSEU6qhv3qUYl7gThaeTxSKF6+Z9rwlGxtifezO6G0QMpCvPNuilVKhEtAEjOE17Wg68Zq8BFaDGXiajaPzkFBW+xBsC/XcC6FnTaAMPpzrlQ4Ix9CqmC3sob+V4rTqPLKY8V9Vb89YmDm7E5Cs3pShBp11EMN+GwANG4eXpRXal8kFkZThZN4xdgpJk= xiaor@bestrui' > /root/.ssh/authorized_keys &&\
+    echo 'export LS_OPTIONS="--color=auto"' >> /root/.bashrc &&\
+    echo 'eval "$(dircolors)"' >> /root/.bashrc &&\
+    echo 'alias ls="ls $LS_OPTIONS"' >> /root/.bashrc &&\
+    echo 'alias ll="ls $LS_OPTIONS -l"' >> /root/.bashrc &&\
+    echo 'alias l="ls $LS_OPTIONS -lA"' >> /root/.bashrc &&\
     echo 'parse_git_branch() {' >> /root/.bashrc && \
     echo '    git branch 2> /dev/null | sed -e "/^[^*]/d" -e "s/* \(.*\)/ (\1)/"' >> /root/.bashrc && \
     echo '}' >> /root/.bashrc  &&\
