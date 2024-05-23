@@ -16,7 +16,11 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | ba
     nvm install 18 && nvm install 20  && nvm use 20 && \
     npm config set registry https://registry.npmmirror.com
 
-
+# Node
+RUN curl -LO https://golang.org/dl/go$GO_VERSION.linux-amd64.tar.gz && \
+    rm -rf /usr/local/go &&\
+    tar -C /usr/local -xzf go$GO_VERSION.linux-amd64.tar.gz && rm -rf go$GO_VERSION.linux-amd64.tar.gz &&\
+    echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc
 
 # Python
 RUN curl https://pyenv.run | bash && \
