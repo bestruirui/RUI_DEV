@@ -7,7 +7,7 @@ ENV PATH=$PATH:/root/.pyenv/bin
 WORKDIR /workplace
 SHELL ["/bin/bash", "-c"] 
 
-RUN apt update && apt install -y nano openssh-server curl wget git gcc g++ make cmake liblzma-dev libnss3-dev zlib1g-dev libgdbm-dev libncurses5-dev   libssl-dev libffi-dev libreadline-dev libsqlite3-dev libbz2-dev && apt clean && rm -rf /var/lib/apt/lists/*
+RUN apt update && apt install -y  inetutils-ping nano openssh-server curl wget git gcc g++ make cmake liblzma-dev libnss3-dev zlib1g-dev libgdbm-dev libncurses5-dev   libssl-dev libffi-dev libreadline-dev libsqlite3-dev libbz2-dev && apt clean && rm -rf /var/lib/apt/lists/*
 
 # GO
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash &&\
