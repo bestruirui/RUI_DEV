@@ -34,7 +34,7 @@ jobs:
           file: ./Dockerfile.base
           platforms: linux/amd64
           load: true
-          tags: bestrui/dev:base
+          tags: dev:base
       - name: 构建推送-ssh
         uses: docker/build-push-action@v3
         with:
