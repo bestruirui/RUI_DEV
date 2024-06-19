@@ -33,17 +33,9 @@ jobs:
           context: .
           file: ./Dockerfile.base
           platforms: linux/amd64
+          load: true
           tags: |
             bestrui/dev:base
-        # 等待基础镜像构建完成并推送
-        env:
-          DOCKER_BUILDKIT: 1
-      - name: 等待基础镜像推送完成
-        run: |
-          while ! docker pull bestrui/dev:base >/dev/null 2>&1; do
-            echo "Waiting for base image to be available..."
-            sleep 10
-          done
       - name: 构建推送-ssh
         uses: docker/build-push-action@v3
         with:
