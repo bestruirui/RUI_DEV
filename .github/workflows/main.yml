@@ -27,12 +27,23 @@ jobs:
       - name: 获取时间
         id: date
         run: echo "::set-output name=date::$(date +'%y%m%d')"
-      - name: 构建推送
+      - name: 构建推送-ssh
         uses: docker/build-push-action@v3
         with:
           context: .
+          file: ./Dockerfile.ssh
           push: true
           platforms: linux/amd64
           tags: |
-            bestrui/dev:latest
-            bestrui/dev:${{ steps.date.outputs.date }}
+            bestrui/dev:ssh
+            bestrui/dev:ssh${{ steps.date.outputs.date }}
+      - name: 构建推送-web
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: ./Dockerfile.web
+          push: true
+          platforms: linux/amd64
+          tags: |
+            bestrui/dev:web
+            bestrui/dev:web${{ steps.date.outputs.date }}
