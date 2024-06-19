@@ -33,16 +33,13 @@ jobs:
           context: .
           file: ./Dockerfile.base
           platforms: linux/amd64
-          load: true
+          push: true
           tags: dev:base
-      - name: 查看镜像
-        run: docker images
       - name: 构建推送-ssh
         uses: docker/build-push-action@v3
         with:
           context: .
           file: ./Dockerfile.ssh
-          pull: false
           push: true
           platforms: linux/amd64
           tags: |
