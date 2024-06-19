@@ -42,6 +42,7 @@ jobs:
         with:
           context: .
           file: ./Dockerfile.ssh
+          pull: false
           push: true
           platforms: linux/amd64
           tags: |
