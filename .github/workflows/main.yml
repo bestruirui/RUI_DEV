@@ -34,6 +34,7 @@ jobs:
           file: ./Dockerfile.base
           platforms: linux/amd64
           load: true
+          cache-to: type=local,dest=/tmp/.buildx-cache-base
           tags: dev:base
       - name: 构建推送-ssh
         uses: docker/build-push-action@v3
@@ -41,6 +42,7 @@ jobs:
           context: .
           file: ./Dockerfile.ssh
           push: true
+          cache-from: type=local,src=/tmp/.buildx-cache-base
           platforms: linux/amd64
           tags: |
             bestrui/dev:ssh
