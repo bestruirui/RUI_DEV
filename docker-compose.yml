@@ -7,7 +7,9 @@ services:
       - 223.5.5.5
       - 223.6.6.6
     volumes:
-      - /home/bestrui/dev:/root/.vscode-server
       - ./:/workplace
+      - ~/code/ssh:/root/.vscode-server
+      - ~/code/web/config:/root/.config/code-server
+      - ~/code/web/share:/root/.local/share/code-server
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/usr/bin/docker

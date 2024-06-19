@@ -27,6 +27,14 @@ jobs:
       - name: 获取时间
         id: date
         run: echo "::set-output name=date::$(date +'%y%m%d')"
+      - name: 构建基础镜像
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          file: ./Dockerfile.base
+          platforms: linux/amd64
+          tags: |
+            bestrui/dev:base
       - name: 构建推送-ssh
         uses: docker/build-push-action@v3
         with:
