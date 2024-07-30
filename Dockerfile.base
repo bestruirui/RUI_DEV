@@ -29,7 +29,7 @@ RUN curl https://pyenv.run | bash && \
     echo 'eval "$(pyenv init -)"' >> ~/.bashrc &&\
     source ~/.bashrc && \
     pyenv install 3.9 &&\
-    pyenv local 3.9 &&\
+    pyenv global 3.9 &&\
     pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple 
 
 RUN echo 'export LS_OPTIONS="--color=auto"' >> /root/.bashrc &&\
@@ -41,6 +41,5 @@ RUN echo 'export LS_OPTIONS="--color=auto"' >> /root/.bashrc &&\
     echo '}' >> /root/.bashrc  &&\
     echo "PS1='\[\033[01;32m\]bestrui\[\033[00m\] \[\033[01;34m\]\w\[\033[00m\]$(parse_git_branch) \$ ' ">> /root/.bashrc &&\
     sed -i 's/http:\/\/deb.debian.org\/debian/http:\/\/mirrors.tuna.tsinghua.edu.cn\/debian/' /etc/apt/sources.list.d/debian.sources &&\
-    sed -i 's/http:\/\/security.debian.org\/debian/http:\/\/mirrors.tuna.tsinghua.edu.cn\/debian/' /etc/apt/sources.list.d/debian.sources
-
-CMD ["/usr/sbin/sshd", "-D"]
+    sed -i 's/http:\/\/security.debian.org\/debian/http:\/\/mirrors.tuna.tsinghua.edu.cn\/debian/' /etc/apt/sources.list.d/debian.sources &&\
+    ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone
