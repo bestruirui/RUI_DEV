@@ -1,0 +1,12 @@
+[submodule "zsh-completions"]
+    path = root/.config/zsh/completion/zsh-completions
+    url = https://github.com/zsh-users/zsh-completions
+[submodule "zsh-autosuggestions"]
+    path = root/.config/zsh/plugins/zsh-autosuggestions
+    url = https://github.com/zsh-users/zsh-autosuggestions
+[submodule "zsh-syntax-highlighting"]
+    path = root/.config/zsh/plugins/zsh-syntax-highlighting
+    url = https://github.com/zsh-users/zsh-syntax-highlighting
+[submodule "powerlevel10k"]
+    path = root/.config/zsh/themes/powerlevel10k
+    url = https://github.com/romkatv/powerlevel10k
