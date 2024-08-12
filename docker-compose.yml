@@ -1,6 +1,6 @@
 services:
   dev:
-    image: bestrui/dev
+    image: bestrui/dev:ssh
     network_mode: host
     privileged: true
     dns: 
