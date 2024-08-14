@@ -39,4 +39,5 @@ RUN curl https://pyenv.run | bash && \
 RUN sed -i 's/http:\/\/deb.debian.org\/debian/http:\/\/mirrors.tuna.tsinghua.edu.cn\/debian/' /etc/apt/sources.list.d/debian.sources &&\
     sed -i 's/http:\/\/security.debian.org\/debian/http:\/\/mirrors.tuna.tsinghua.edu.cn\/debian/' /etc/apt/sources.list.d/debian.sources &&\
     chmod 600 /etc/ssh/ssh_host_* && \
+    wget https://github.com/svenstaro/miniserve/releases/download/v0.27.1/miniserve-0.27.1-x86_64-unknown-linux-gnu -o /usr/local/bin/miniserve && chmod +x /usr/local/bin/miniserve &&\
     ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone
