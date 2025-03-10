@@ -7,7 +7,7 @@ WORKDIR /workplace
 
 SHELL ["/bin/bash", "-c"] 
 
-RUN apt update && apt install -y zsh inetutils-ping nano openssh-server curl wget git gcc g++ make cmake liblzma-dev libnss3-dev zlib1g-dev libgdbm-dev libncurses5-dev   libssl-dev libffi-dev libreadline-dev libsqlite3-dev libbz2-dev && apt clean && rm -rf /var/lib/apt/lists/*
+RUN apt update && apt install -y unzip zsh inetutils-ping nano openssh-server curl wget git gcc g++ make cmake liblzma-dev libnss3-dev zlib1g-dev libgdbm-dev libncurses5-dev   libssl-dev libffi-dev libreadline-dev libsqlite3-dev libbz2-dev && apt clean && rm -rf /var/lib/apt/lists/*
 
 COPY root /root
 COPY etc/ssh/* /etc/ssh/
@@ -36,6 +36,8 @@ RUN curl https://pyenv.run | bash && \
     pyenv global 3.9 &&\
     pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple 
 
+
+# clangd
 RUN sed -i 's/http:\/\/deb.debian.org\/debian/http:\/\/mirrors.tuna.tsinghua.edu.cn\/debian/' /etc/apt/sources.list.d/debian.sources &&\
     sed -i 's/http:\/\/security.debian.org\/debian/http:\/\/mirrors.tuna.tsinghua.edu.cn\/debian/' /etc/apt/sources.list.d/debian.sources &&\
     chmod 600 /etc/ssh/ssh_host_* && \

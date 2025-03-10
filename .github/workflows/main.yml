@@ -5,29 +5,36 @@ on:
     branches:
       - main
 jobs:
-  build:
+  prepare:
     runs-on: ubuntu-latest
+    outputs:
+      date: ${{ steps.date.outputs.date }}
+    steps:
+      - name: Get date
+        id: date
+        run: echo "::set-output name=date::$(date +'%y%m%d')"
+
+  build-base:
+    runs-on: ubuntu-latest
+    needs: prepare
     steps:
       - uses: actions/checkout@v3
         with:
           submodules: 'true'
-      - name: 设置Docker环境
+      - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
+      - name: Set up Buildx
         uses: docker/setup-buildx-action@v2
-      - name: 设置时区
+      - name: Set timezone
         uses: szenius/set-timezone@v1.1
         with:
           timezoneLinux: "Asia/Shanghai"
-      - name: 登录
+      - name: Login to DockerHub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: 获取时间
-        id: date
-        run: echo "::set-output name=date::$(date +'%y%m%d')"
-      - name: 构建基础镜像
+      - name: Build base image
         uses: docker/build-push-action@v3
         with:
           context: .
@@ -35,7 +42,24 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: bestrui/dev:base
-      - name: 构建推送-ssh
+
+  build-ssh:
+    needs: [prepare, build-base]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: 'true'
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push ssh image
         uses: docker/build-push-action@v3
         with:
           context: .
@@ -44,8 +68,25 @@ jobs:
           platforms: linux/amd64
           tags: |
             bestrui/dev:ssh
-            bestrui/dev:ssh${{ steps.date.outputs.date }}
-      - name: 构建推送-web
+            bestrui/dev:ssh${{ needs.prepare.outputs.date }}
+
+  build-web:
+    needs: [prepare, build-base]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: 'true'
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push web image
         uses: docker/build-push-action@v3
         with:
           context: .
@@ -54,4 +95,4 @@ jobs:
           platforms: linux/amd64
           tags: |
             bestrui/dev:web
-            bestrui/dev:web${{ steps.date.outputs.date }}
+            bestrui/dev:web${{ needs.prepare.outputs.date }}

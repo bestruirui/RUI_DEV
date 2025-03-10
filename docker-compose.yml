@@ -10,7 +10,9 @@ services:
       - ~/.ssh/id_rsa:/root/.ssh/id_rsa
       - ./:/workplace
       - ~/code/ssh:/root/.vscode-server
+      - ~/code/ssh/cursor:/root/.cursor-server
       - ~/code/web/config:/root/.config/code-server
       - ~/code/web/share:/root/.local/share/code-server
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/usr/bin/docker
+      - /usr/libexec/docker/cli-plugins/docker-compose:/usr/bin/docker-compose

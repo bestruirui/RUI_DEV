@@ -32,3 +32,14 @@ alias ls='ls --color=auto'
 alias ll='ls -alF --color=auto'
 alias la='ls -A --color=auto'
 alias l='ls -CF --color=auto'
+
+# History configuration
+HISTFILE=~/.zsh_history    # History file location
+HISTSIZE=10000            # Maximum events in internal history
+SAVEHIST=10000           # Maximum events in history file
+setopt SHARE_HISTORY      # Share history between all sessions
+setopt HIST_EXPIRE_DUPS_FIRST # Expire duplicate entries first when trimming history
+setopt HIST_IGNORE_DUPS   # Don't record an entry that was just recorded again
+setopt HIST_IGNORE_SPACE  # Don't record entries starting with a space
+setopt HIST_VERIFY       # Show command with history expansion before running it
+setopt HIST_SAVE_NO_DUPS # Don't write duplicate entries in the history file
