@@ -1,16 +1,25 @@
 FROM debian
 
 ENV PATH=$PATH:/usr/local/go/bin
-ENV PATH=$PATH:/root/.pyenv/bin
+ENV PATH=$PATH:/home/dev/.pyenv/bin
 
 WORKDIR /workplace
 
 SHELL ["/bin/bash", "-c"] 
 
-RUN apt update && apt install -y unzip zsh inetutils-ping nano openssh-server curl wget git gcc g++ make cmake liblzma-dev libnss3-dev zlib1g-dev libgdbm-dev libncurses5-dev   libssl-dev libffi-dev libreadline-dev libsqlite3-dev libbz2-dev && apt clean && rm -rf /var/lib/apt/lists/*
+RUN apt update && apt install -y unzip zsh inetutils-ping nano openssh-server curl wget git gcc g++ make cmake liblzma-dev libnss3-dev zlib1g-dev libgdbm-dev libncurses5-dev   libssl-dev libffi-dev libreadline-dev libsqlite3-dev libbz2-dev sudo && apt clean && rm -rf /var/lib/apt/lists/*
 
-COPY root /root
+# 创建dev用户并配置sudo免密
+RUN useradd -m -s /bin/bash dev && \
+    echo "dev ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/dev && \
+    chmod 0440 /etc/sudoers.d/dev
+
+# 复制配置文件
+COPY dev /home/dev
 COPY etc/ssh/* /etc/ssh/
+RUN chown -R dev:dev /home/dev
+
+USER dev
 
 # Node.js
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash &&\
@@ -22,9 +31,8 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | ba
 # GO
 RUN GO_VERSION=$(curl 'https://go.dev/VERSION?m=text' | grep go) &&\
     curl -LO https://golang.org/dl/$GO_VERSION.linux-amd64.tar.gz && \
-    rm -rf /usr/local/go &&\
-    tar -C /usr/local -xzf $GO_VERSION.linux-amd64.tar.gz && rm -rf $GO_VERSION.linux-amd64.tar.gz &&\
-    echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc
+    sudo rm -rf /usr/local/go &&\
+    sudo tar -C /usr/local -xzf $GO_VERSION.linux-amd64.tar.gz && rm -rf $GO_VERSION.linux-amd64.tar.gz 
 
 # Python
 RUN curl https://pyenv.run | bash && \
@@ -36,10 +44,9 @@ RUN curl https://pyenv.run | bash && \
     pyenv global 3.9 &&\
     pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple 
 
-
 # clangd
-RUN sed -i 's/http:\/\/deb.debian.org\/debian/http:\/\/mirrors.tuna.tsinghua.edu.cn\/debian/' /etc/apt/sources.list.d/debian.sources &&\
-    sed -i 's/http:\/\/security.debian.org\/debian/http:\/\/mirrors.tuna.tsinghua.edu.cn\/debian/' /etc/apt/sources.list.d/debian.sources &&\
-    chmod 600 /etc/ssh/ssh_host_* && \
-    wget https://github.com/svenstaro/miniserve/releases/download/v0.27.1/miniserve-0.27.1-x86_64-unknown-linux-gnu -o /usr/local/bin/miniserve && chmod +x /usr/local/bin/miniserve &&\
-    ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone
+RUN sudo sed -i 's/http:\/\/deb.debian.org\/debian/http:\/\/mirrors.tuna.tsinghua.edu.cn\/debian/' /etc/apt/sources.list.d/debian.sources &&\
+    sudo sed -i 's/http:\/\/security.debian.org\/debian/http:\/\/mirrors.tuna.tsinghua.edu.cn\/debian/' /etc/apt/sources.list.d/debian.sources &&\
+    sudo chmod 600 /etc/ssh/ssh_host_* && \
+    sudo wget https://github.com/svenstaro/miniserve/releases/download/v0.27.1/miniserve-0.27.1-x86_64-unknown-linux-gnu -o /usr/local/bin/miniserve && sudo chmod +x /usr/local/bin/miniserve &&\
+    sudo ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai | sudo tee /etc/timezone
