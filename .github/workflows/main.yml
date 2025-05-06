@@ -2,18 +2,8 @@ name: Docker Image CI
 on:
   workflow_dispatch:
 jobs:
-  prepare:
+  devbox:
     runs-on: ubuntu-latest
-    outputs:
-      date: ${{ steps.date.outputs.date }}
-    steps:
-      - name: Get date
-        id: date
-        run: echo "::set-output name=date::$(date +'%y%m%d')"
-
-  build-base:
-    runs-on: ubuntu-latest
-    needs: prepare
     steps:
       - uses: actions/checkout@v3
         with:
@@ -31,65 +21,62 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build base image
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          file: ./Dockerfile.base
-          platforms: linux/amd64
-          push: true
-          tags: bestrui/dev:base
+      - name: Set up DevContainer
+        run: npm install -g @devcontainers/cli
+      - name: Build and Push
+        run: ls -al && devcontainer build --push --image-name ${{ secrets.DOCKERHUB_USERNAME }}/devbox  --platform  linux/amd64 --config devcontainer.json  --workspace-folder . 
+      
 
-  build-ssh:
-    needs: [prepare, build-base]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: 'true'
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Login to DockerHub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and push ssh image
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          file: ./Dockerfile.ssh
-          push: true
-          platforms: linux/amd64
-          tags: |
-            bestrui/dev:ssh
-            bestrui/dev:ssh${{ needs.prepare.outputs.date }}
+  # build-ssh:
+  #   needs: [prepare, build-base]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         submodules: 'true'
+  #     - name: Set up QEMU
+  #       uses: docker/setup-qemu-action@v2
+  #     - name: Set up Buildx
+  #       uses: docker/setup-buildx-action@v2
+  #     - name: Login to DockerHub
+  #       uses: docker/login-action@v2
+  #       with:
+  #         username: ${{ secrets.DOCKERHUB_USERNAME }}
+  #         password: ${{ secrets.DOCKERHUB_TOKEN }}
+  #     - name: Build and push ssh image
+  #       uses: docker/build-push-action@v3
+  #       with:
+  #         context: .
+  #         file: ./Dockerfile.ssh
+  #         push: true
+  #         platforms: linux/amd64
+  #         tags: |
+  #           bestrui/dev:ssh
+  #           bestrui/dev:ssh${{ needs.prepare.outputs.date }}
 
-  build-web:
-    needs: [prepare, build-base]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: 'true'
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Login to DockerHub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and push web image
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          file: ./Dockerfile.web
-          push: true
-          platforms: linux/amd64
-          tags: |
-            bestrui/dev:web
-            bestrui/dev:web${{ needs.prepare.outputs.date }}
+  # build-web:
+  #   needs: [prepare, build-base]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         submodules: 'true'
+  #     - name: Set up QEMU
+  #       uses: docker/setup-qemu-action@v2
+  #     - name: Set up Buildx
+  #       uses: docker/setup-buildx-action@v2
+  #     - name: Login to DockerHub
+  #       uses: docker/login-action@v2
+  #       with:
+  #         username: ${{ secrets.DOCKERHUB_USERNAME }}
+  #         password: ${{ secrets.DOCKERHUB_TOKEN }}
+  #     - name: Build and push web image
+  #       uses: docker/build-push-action@v3
+  #       with:
+  #         context: .
+  #         file: ./Dockerfile.web
+  #         push: true
+  #         platforms: linux/amd64
+  #         tags: |
+  #           bestrui/dev:web
+  #           bestrui/dev:web${{ needs.prepare.outputs.date }}
