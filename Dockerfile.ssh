@@ -1,9 +1,0 @@
-FROM bestrui/dev:base
-
-SHELL ["/bin/bash", "-c"] 
-
-RUN sudo mkdir /var/run/sshd && \
-    sudo sed -i 's/#Port 22/Port 2222/' /etc/ssh/sshd_config &&\
-    chsh -s /usr/bin/zsh
-
-CMD ["sudo", "/usr/sbin/sshd", "-D"]

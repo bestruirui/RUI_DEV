@@ -1,7 +1,5 @@
 FROM debian:latest
 
-COPY etc/ssh/* /etc/ssh/
-
 # Install required dependencies
 RUN apt-get update \
     && apt-get upgrade -y \
