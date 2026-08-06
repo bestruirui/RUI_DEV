@@ -1,0 +1,9 @@
+services:
+  dev:
+    image: bestrui/devbox
+    user: "1000:1000"
+    network_mode: host
+    privileged: true
+    volumes:
+      - /workplace:/workplace
+      - /workplace/code-server/vscode:/home/bestrui/.vscode-server
