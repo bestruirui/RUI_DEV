@@ -1,11 +1,14 @@
 FROM debian
 
 ENV TZ=Asia/Shanghai
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
 
 RUN apt update && \
-    apt install -y curl sudo nano ca-certificates zsh git openssh-server gcc g++ gdb tzdata wget iputils-ping net-tools iproute2 dnsutils mtr-tiny jq htop tree && \
+    apt install -y curl sudo nano ca-certificates zsh git openssh-server gcc g++ gdb tzdata wget iputils-ping net-tools iproute2 dnsutils mtr-tiny jq htop tree locales && \
     rm -rf /var/lib/apt/lists/* && \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
+    sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen && \
     mkdir -p /run/sshd && \
     ssh-keygen -A && \
     sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config && \
